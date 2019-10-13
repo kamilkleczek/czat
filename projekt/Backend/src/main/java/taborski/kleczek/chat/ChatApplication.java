@@ -1,13 +1,13 @@
-package taborski.kleczek.czat;
+package taborski.kleczek.chat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CzatApplication {
+public class ChatApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CzatApplication.class, args);
+		SpringApplication.run(ChatApplication.class, args);
 	}
 
 }
