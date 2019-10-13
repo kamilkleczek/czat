@@ -7,4 +7,5 @@ Stos technologiczny:
 - Zarządzenie Kontenerami: Kubernetes
 
 Architektura:
+
 <img src="Diagram.png" />
