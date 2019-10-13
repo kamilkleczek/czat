@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Chat.scss";
+import SockJsClient from "react-stomp";
 
 const Chat = () => {
+  const [connected, setConnected] = useState(false);
+  const [messages, setMessages] = useState([]);
+
   return (
     <div id="chat-page">
       <div className="chat-container">
         <div className="chat-header">
           <h2>Welcome in our chat!</h2>
         </div>
-        {/* <div className="connecting">Connecting...</div> */}
-        <ul id="messageArea"></ul>
+        {!connected ? (
+          <div className="connecting">Connecting...</div>
+        ) : (
+          <ul id="messageArea"></ul>
+        )}
+
         <form id="messageForm" name="messageForm">
           <div className="form-group">
             <div className="input-group clearfix">
@@ -20,7 +28,7 @@ const Chat = () => {
                 autoComplete="off"
                 className="form-control"
               />
-              <button type="submit" className="primary">
+              <button type="submit" className="primary" disabled={!connected}>
                 Send
               </button>
             </div>

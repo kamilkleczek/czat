@@ -1,18 +1,31 @@
-import React from "react";
-import "./LoginPage.scss"
-const LoginPage = () => {
+import React, { useState } from "react";
+import "./LoginPage.scss";
+import { withRouter } from "react-router-dom";
+
+const LoginPage = props => {
+  const [name, setName] = useState("");
+
   return (
     <div id="loginPage-page">
       <div className="loginPage-page-container">
         <h1 className="title">Type your Name</h1>
-        <form id="loginPageForm" name="loginPageForm">
+        <form
+          id="loginPageForm"
+          name="loginPageForm"
+          onSubmit={event => {
+            props.history.push("/chat");
+            event.preventDefault();
+          }}
+        >
           <div className="form-group">
             <input
               type="text"
               id="name"
               placeholder="Name"
+              value={name}
               autoComplete="off"
               className="form-control"
+              onChange={event => setName(event.target.value)}
             />
           </div>
           <div className="form-group">
@@ -26,4 +39,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default withRouter(LoginPage);
