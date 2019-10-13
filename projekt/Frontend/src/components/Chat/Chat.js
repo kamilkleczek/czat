@@ -43,7 +43,7 @@ const Chat = () => {
           name="messageForm"
           onSubmit={event => {
             clientRef.sendMessage(
-              `${BACKEND_URL}/app/all`,
+              "/app/all",
               JSON.stringify(message)
             );
             setMessage("");
