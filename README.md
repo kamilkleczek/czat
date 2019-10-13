@@ -6,3 +6,5 @@ Stos technologiczny:
 - Konteneryzacja: Docker
 - Zarządzenie Kontenerami: Kubernetes
 
+Architektura:
+<img src="Diagram.png" />
