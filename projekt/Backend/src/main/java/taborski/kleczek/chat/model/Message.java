@@ -1,4 +1,4 @@
-package taborski.kleczek.czat.model;
+package taborski.kleczek.chat.model;
 
 import lombok.Data;
 

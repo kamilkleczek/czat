@@ -1,4 +1,4 @@
-package taborski.kleczek.czat.Controller;
+package taborski.kleczek.chat.Controller;
 
 import org.springframework.stereotype.Controller;
 

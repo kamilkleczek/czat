@@ -1,4 +1,4 @@
-package taborski.kleczek.czat.config;
+package taborski.kleczek.chat.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
