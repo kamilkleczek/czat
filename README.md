@@ -29,6 +29,14 @@ Stos technologiczny:
 
 Analiza wymagań
 Wymagania funkcjonalne i niefunkcjonalne - specyfikacja
+- Wymagania niefunkcjonalne:
+System musi być wydajny. 
+System musi być skalowalny.
+
+- Wymagania funkcjonalne:
+System loguje aktywność użytkowników (logowanie oraz wysłanie wiadomości).
+System autoryzuje użytkowników.
+System umożliwia rejestracje użytkowników.
 TODO
 
 Przypadki użycia
@@ -46,5 +54,19 @@ Planowane testy
 - e2e
 
 Roadmap:
+Zjazd 3:
 - Uzupełnienie dokumentacji.
-- Wstępny prototyp system (frontend i backend bez baz danych, logowania, rejestracji)
+- Wstępny prototyp system - frontend
+
+Zjazd 4:
+- Backend
+- Rejestracja + logowanie użytkowników
+
+Zjazd 5: 
+- Logowanie aktywności
+
+Zjazd 6:
+- Testy
+
+Zjazd 7: 
+- Oddanie projektu
