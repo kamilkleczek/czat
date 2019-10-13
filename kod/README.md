@@ -1,1 +1,1 @@
-HOW TO BUILD
+# How to
