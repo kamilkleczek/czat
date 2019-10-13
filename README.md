@@ -1,2 +1,8 @@
 # Projekt Czatu
-TODO
+
+Stos technologiczny:
+Backend: Java + Spring
+Frontend: Javascript + React
+Konteneryzacja: Docker
+Zarządzenie Kontenerami: Kubernetes
+
