@@ -7,9 +7,9 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /*
-* Configuracja websocketow
-* klienci moga sie podlaczac za pomoca /ws endpoint
-* */
+ * Configuracja websocketow
+ * klienci moga sie podlaczac za pomoca /ws endpoint
+ * */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -17,7 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // WithSockJs zapewnia obsluge jezeli przegladarka natywnie nie obsluguje WebSocketow
-        registry.addEndpoint("/ws").withSockJS();
+        registry.addEndpoint("/handler").setAllowedOrigins("*").withSockJS();
     }
 
     @Override
@@ -25,6 +25,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // Wiadomosci  wysylane na ten endpoint  sa przekazywane do message handling methods
         registry.setApplicationDestinationPrefixes("/app");
         // Wiadomosci wysylane na ten endpoint sa przekazywane do Brokera
-        registry.enableSimpleBroker("/topic");
+        registry.enableSimpleBroker("/topic", "/queue");
     }
 }

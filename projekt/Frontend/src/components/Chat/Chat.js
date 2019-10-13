@@ -1,28 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Chat.scss";
 import SockJsClient from "react-stomp";
-
+import Axios from "axios";
+const BACKEND_URL = "http://localhost:8080/";
 const Chat = () => {
   const [connected, setConnected] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [clientRef, setClientRef] = useState(null);
+
+  useEffect(() => {
+    Axios.get(`${BACKEND_URL}/history`).then(response => {
+      console.log("TCL: Chat -> response", response);
+      setMessages(response.data);
+    });
+  }, []);
 
   const onMessageReceive = (msg, topic) => {
     console.log("TCL: onMessageReceive -> msg", msg);
-    // this.setState(prevState => ({
-    //   messages: [...prevState.messages, msg]
-    // }));
+
+    setMessages([...messages, msg]);
   };
 
-  const sendMessage = (msg, selfMsg) => {
-    console.log("TCL: sendMessage -> selfMsg", selfMsg);
-    // try {
-    //   this.clientRef.sendMessage("/app/all", JSON.stringify(selfMsg));
-    //   return true;
-    // } catch(e) {
-    //   return false;
-    // }
-  };
   return (
     <div id="chat-page">
       <div className="chat-container">
@@ -43,6 +42,10 @@ const Chat = () => {
           id="messageForm"
           name="messageForm"
           onSubmit={event => {
+            clientRef.sendMessage(
+              `${BACKEND_URL}/app/all`,
+              JSON.stringify(message)
+            );
             setMessage("");
             event.preventDefault();
           }}
@@ -64,6 +67,19 @@ const Chat = () => {
             </div>
           </div>
         </form>
+        <SockJsClient
+          url={`${BACKEND_URL}/handler`}
+          topics={["/topic/all"]}
+          onMessage={onMessageReceive}
+          ref={client => setClientRef(client)}
+          onConnect={() => {
+            setConnected(true);
+          }}
+          onDisconnect={() => {
+            setConnected(false);
+          }}
+          debug={false}
+        />
       </div>
     </div>
   );
