@@ -1,26 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import "./Chat.scss";
 import SockJsClient from "react-stomp";
 import Axios from "axios";
+import {MessageGenerator, MessageType} from "../Model/Message";
 const BACKEND_URL = "http://localhost:8080/";
+
+
+
 const Chat = () => {
-  const [connected, setConnected] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [clientRef, setClientRef] = useState(null);
+  const [ connected, setConnected ] = useState(false);
+  const [ message, setMessage ] = useState("");
+  const [ messages, setMessages ] = useState([]);
+  const [ clientRef, setClientRef ] = useState(null);
 
   useEffect(() => {
     Axios.get(`${BACKEND_URL}/history`).then(response => {
-      console.log("TCL: Chat -> response", response);
       setMessages(response.data);
     });
   }, []);
 
   const onMessageReceive = (msg, topic) => {
-    console.log("TCL: onMessageReceive -> msg", msg);
-
-    setMessages([...messages, msg]);
+    setMessages([ ...messages, msg ]);
   };
+
+  const getMessage = (message) => {
+    if (message.type === MessageType.Chat) {
+      return <li><div className="username">{message.sender}</div>{message.content}</li>
+
+    }
+    return <li>{message.content}</li>
+  }
 
   return (
     <div id="chat-page">
@@ -31,12 +40,10 @@ const Chat = () => {
         {!connected ? (
           <div className="connecting">Connecting...</div>
         ) : (
-          <ul id="messageArea">
-            {messages.map(text => (
-              <li>{text}</li>
-            ))}
-          </ul>
-        )}
+            <ul id="messageArea">
+              {messages.map(m => getMessage(m))}
+            </ul>
+          )}
 
         <form
           id="messageForm"
@@ -44,7 +51,7 @@ const Chat = () => {
           onSubmit={event => {
             clientRef.sendMessage(
               "/app/all",
-              JSON.stringify(message)
+              MessageGenerator.message(message)
             );
             setMessage("");
             event.preventDefault();
@@ -69,14 +76,22 @@ const Chat = () => {
         </form>
         <SockJsClient
           url={`${BACKEND_URL}/handler`}
-          topics={["/topic/all"]}
+          topics={[ "/topic/all" ]}
           onMessage={onMessageReceive}
           ref={client => setClientRef(client)}
           onConnect={() => {
             setConnected(true);
+            clientRef.sendMessage(
+              "/app/all",
+              MessageGenerator.connect()
+            );
           }}
           onDisconnect={() => {
             setConnected(false);
+            clientRef.sendMessage(
+              "/app/all",
+              MessageGenerator.leave()
+            );
           }}
           debug={false}
         />

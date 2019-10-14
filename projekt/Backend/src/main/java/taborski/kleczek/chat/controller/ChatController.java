@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import taborski.kleczek.chat.model.ChatHistoryDao;
 import taborski.kleczek.chat.model.Message;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,17 +32,18 @@ public class ChatController {
     @MessageMapping("/all")
     @MessageExceptionHandler
     @SendTo("/topic/all")
-    public String post(@Payload String message) {
+    public Message post(@Payload Message message) {
 
-        log.info("message: {}", message);
+        log.info("message: from {}, text {}", message.getSender(), message.getContent());
 //        message.put("timestamp", Long.toString(System.currentTimeMillis()));
 //        chatHistoryDao.save(message);
+        chatHistoryDao.save(message);
         return message;
     }
 
 
     @RequestMapping("/history")
-    public List<Map<String, String>> getChatHistory() {
+    public List<Message> getChatHistory() {
         return chatHistoryDao.get();
     }
 }

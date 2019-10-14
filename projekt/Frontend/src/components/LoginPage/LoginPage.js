@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./LoginPage.scss";
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
+import {User} from "../Model/User";
 
 const LoginPage = props => {
-  const [name, setName] = useState("");
+  const [ name, setName ] = useState("");
 
   return (
     <div id="loginPage-page">
@@ -13,6 +14,7 @@ const LoginPage = props => {
           id="loginPageForm"
           name="loginPageForm"
           onSubmit={event => {
+            User.name = name;
             props.history.push("/chat");
             event.preventDefault();
           }}
