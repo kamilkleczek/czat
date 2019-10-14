@@ -32,8 +32,9 @@ public class ChatController {
     @MessageMapping("/all")
     @MessageExceptionHandler
     @SendTo("/topic/all")
-    public Message post(@Payload Message message) {
-
+    public Message post(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
+// Add username in web socket sessionł
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
         log.info("message: from {}, text {}", message.getSender(), message.getContent());
 //        message.put("timestamp", Long.toString(System.currentTimeMillis()));
 //        chatHistoryDao.save(message);

@@ -13,20 +13,20 @@ const Chat = () => {
   const [ messages, setMessages ] = useState([]);
   const [ clientRef, setClientRef ] = useState(null);
 
-  useEffect(() => {
-    Axios.get(`${BACKEND_URL}/history`).then(response => {
-      setMessages(response.data);
-    });
-  }, []);
+  // useEffect(() => {
+  // Axios.get(`${BACKEND_URL}/history`).then(response => {
+  //   setMessages(response.data);
+
+  // }, []);
 
   const onMessageReceive = (msg, topic) => {
     setMessages([ ...messages, msg ]);
   };
 
   const getMessage = (message) => {
+    console.log("TCL: getMessage -> message", message)
     if (message.type === MessageType.Chat) {
       return <li><div className="username">{message.sender}</div>{message.content}</li>
-
     }
     return <li>{message.content}</li>
   }
@@ -88,10 +88,6 @@ const Chat = () => {
           }}
           onDisconnect={() => {
             setConnected(false);
-            clientRef.sendMessage(
-              "/app/all",
-              MessageGenerator.leave()
-            );
           }}
           debug={false}
         />

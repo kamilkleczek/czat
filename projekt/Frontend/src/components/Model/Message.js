@@ -13,13 +13,6 @@ export const MessageGenerator = {
       type: MessageType.Chat
     })
   },
-  leave: () => {
-    return JSON.stringify({
-      content: `${User.name} left!`,
-      sender: User.name,
-      type: MessageType.Leave
-    })
-  },
   connect: () => {
     return JSON.stringify({
       content: `${User.name} joined!`,
