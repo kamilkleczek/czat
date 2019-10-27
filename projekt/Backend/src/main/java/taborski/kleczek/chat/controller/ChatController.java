@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import taborski.kleczek.chat.model.ChatHistoryDao;
 import taborski.kleczek.chat.model.Message;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -33,11 +31,8 @@ public class ChatController {
     @MessageExceptionHandler
     @SendTo("/topic/all")
     public Message post(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
-// Add username in web socket sessionł
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         log.info("message: from {}, text {}", message.getSender(), message.getContent());
-//        message.put("timestamp", Long.toString(System.currentTimeMillis()));
-//        chatHistoryDao.save(message);
         chatHistoryDao.save(message);
         return message;
     }
