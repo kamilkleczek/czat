@@ -4,6 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 /projekt/Frontend/node_modules
+/projekt/Frontend/debug.log
 
 ### STS ###
 .apt_generated
