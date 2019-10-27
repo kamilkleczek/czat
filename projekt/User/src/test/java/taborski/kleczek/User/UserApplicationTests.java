@@ -1,4 +1,4 @@
-package taborski.kleczek.chat;
+package taborski.kleczek.User;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ChatApplicationTests {
+public class UserApplicationTests {
 
 	@Test
 	public void contextLoads() {
