@@ -1,12 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import "./Chat.scss";
 import SockJsClient from "react-stomp";
-import Axios from "axios";
 import {MessageGenerator, MessageType} from "../Model/Message";
-const BACKEND_URL = "http://localhost:8080/";
-
-
-
+import {BACKEND_URL} from "../../Service/settings";
+../../Service/settings
 const Chat = () => {
   const [ connected, setConnected ] = useState(false);
   const [ message, setMessage ] = useState("");
