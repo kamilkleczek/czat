@@ -1,8 +1,7 @@
-package taborski.kleczek.User.controller;
+package taborski.kleczek.User.controller.impl;
 
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import taborski.kleczek.User.exceptions.BadCredentialsException;
@@ -17,6 +16,13 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 public class UserController {
     private final IUserService userService;
+
+//    @Autowired
+//    @Lazy
+//    private EurekaClient eurekaClient;
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     @Autowired
     public UserController(IUserService userService) {
@@ -53,5 +59,11 @@ public class UserController {
         }
     }
 
+    @GetMapping("/greeting")
+    public String greeting() {
+        return "test";
+//        return String.format(
+//                "Hello from '%s'!", eurekaClient.getApplication(appName).getName());
+    }
 
 }
