@@ -26,7 +26,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity loginUser(@Valid @RequestBody User user ) {
         try {
-        User loggedUser = userService.loginUser(user);
+            User loggedUser = userService.loginUser(user);
         return ResponseEntity.ok(loggedUser);
         } catch (BadCredentialsException e) {
             return ResponseEntity.badRequest().body("Bad Credentials");

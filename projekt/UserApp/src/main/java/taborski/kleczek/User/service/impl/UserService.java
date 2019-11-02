@@ -49,7 +49,7 @@ public class UserService implements IUserService {
     public User loginUser(User user) throws BadCredentialsException {
         User userFound = userRepository.findByName(user.getName()).orElseThrow(BadCredentialsException::new);
         if (passwordEncoder().matches(user.getPassword(), userFound.getPassword())) {
-            return user;
+            return userFound;
         } else {
             throw new BadCredentialsException();
         }
