@@ -13,12 +13,6 @@ const Chat = () => {
   const [ messages, setMessages ] = useState([]);
   const [ clientRef, setClientRef ] = useState(null);
 
-  // useEffect(() => {
-  // Axios.get(`${BACKEND_URL}/history`).then(response => {
-  //   setMessages(response.data);
-
-  // }, []);
-
   const onMessageReceive = (msg, topic) => {
     setMessages([ ...messages, msg ]);
   };
