@@ -3,7 +3,6 @@ import "./Chat.scss";
 import SockJsClient from "react-stomp";
 import {MessageGenerator, MessageType} from "../Model/Message";
 import {BACKEND_URL} from "../../Service/settings";
-../../Service/settings
 const Chat = () => {
   const [ connected, setConnected ] = useState(false);
   const [ message, setMessage ] = useState("");

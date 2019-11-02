@@ -8,8 +8,12 @@ const LoginPage = props => {
   const [ name, setName ] = useState("");
   const [ password, setPassword ] = useState("");
   const [ isLoading, setLoading ] = useState(false);
-  const [ isRegistering, setRgister ] = useState(false);
+  const [ isRegistering, setRegister ] = useState(false);
 
+  const clearInputs = () => {
+    setPassword("");
+    setName("");
+  }
 
   return (
     <div id="loginPage-page">
@@ -59,7 +63,10 @@ const LoginPage = props => {
             </button>
           </div>
         </form>
-        <button className="register-btn" type="button" onClick={() => isRegistering ? setRgister(false) : setRgister(true)}>{isRegistering ? "Go to Login" : "Go to Register"}</button>
+        <button className="register-btn" type="button" onClick={() => {
+          isRegistering ? setRegister(false) : setRegister(true)
+          clearInputs();
+        }}>{isRegistering ? "Go to Login" : "Go to Register"}</button>
       </div>
     </div>
   );
