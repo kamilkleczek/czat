@@ -1,7 +1,9 @@
 package taborski.kleczek.User.controller.impl;
 
+import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import taborski.kleczek.User.exceptions.BadCredentialsException;
@@ -17,9 +19,9 @@ import javax.validation.Valid;
 public class UserController {
     private final IUserService userService;
 
-//    @Autowired
-//    @Lazy
-//    private EurekaClient eurekaClient;
+    @Autowired
+    @Lazy
+    private EurekaClient eurekaClient;
 
     @Value("${spring.application.name}")
     private String appName;
@@ -61,9 +63,8 @@ public class UserController {
 
     @GetMapping("/greeting")
     public String greeting() {
-        return "test";
-//        return String.format(
-//                "Hello from '%s'!", eurekaClient.getApplication(appName).getName());
+        return String.format(
+                "Hello from '%s'!", eurekaClient.getApplication(appName).getName());
     }
 
 }

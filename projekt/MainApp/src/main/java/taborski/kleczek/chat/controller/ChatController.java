@@ -1,5 +1,8 @@
 package taborski.kleczek.chat.controller;
 
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
+import com.netflix.discovery.shared.Application;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class ChatController {
     @Autowired
     private ChatHistoryDao chatHistoryDao;
 
+    @Autowired
+    private IUserAppClient userAppClient;
+
     @MessageMapping("/all")
     @MessageExceptionHandler
     @SendTo("/topic/all")
@@ -42,4 +48,10 @@ public class ChatController {
     public List<Message> getChatHistory() {
         return chatHistoryDao.get();
     }
+
+    @RequestMapping("/api/greetings")
+    public String getGreetings() {
+        return userAppClient.greeting();
+    }
+
 }
