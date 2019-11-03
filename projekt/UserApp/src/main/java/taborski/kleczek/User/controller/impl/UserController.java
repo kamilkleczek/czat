@@ -1,11 +1,11 @@
 package taborski.kleczek.User.controller.impl;
 
-import com.netflix.discovery.EurekaClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import taborski.kleczek.User.exceptions.BadCredentialsException;
 import taborski.kleczek.User.exceptions.ResourceAlreadyExistsException;
 import taborski.kleczek.User.exceptions.ResourceNotFoundException;
@@ -14,17 +14,11 @@ import taborski.kleczek.User.service.IUserService;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     private final IUserService userService;
-
-    @Autowired
-    @Lazy
-    private EurekaClient eurekaClient;
-
-    @Value("${spring.application.name}")
-    private String appName;
 
     @Autowired
     public UserController(IUserService userService) {
@@ -32,39 +26,47 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity loginUser(@Valid @RequestBody User user ) {
+    public User loginUser(@Valid @RequestBody User user) {
+        log.info("login user {}", user.getName());
         try {
-            User loggedUser = userService.loginUser(user);
-        return ResponseEntity.ok(loggedUser);
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.badRequest().body("Bad Credentials");
+            User logged = userService.loginUser(user);
+            log.info("User found id = {}", logged.getId());
+
+            return logged;
+        } catch (BadCredentialsException exc) {
+            log.error("User name = {} bad credentials", user.getName());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Bad credentials!", exc);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity registerUser(@Valid @RequestBody User user ) {
+    public User registerUser(@Valid @RequestBody User user) {
+        log.info("register user {}", user.getName());
         try {
             User newUser = userService.createUser(user);
-            return ResponseEntity.ok(newUser);
-        } catch (ResourceAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body("User with name " + user.getName() + " already exists!");
+            log.info("User registered in id = {}", newUser.getId());
+
+            return newUser;
+        } catch (ResourceAlreadyExistsException exc) {
+            log.error("User name = {} already exists ", user.getName());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "User already exists!", exc);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getUser(@PathVariable(name = "id") @Valid Long userId) {
+    public User getUser(@PathVariable(name = "id") @Valid Long userId) {
+        log.info("get user id = {}", userId);
         try {
-            User user= userService.getUserById(userId);
-            return ResponseEntity.ok(user);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body("User not found!");
+            User user = userService.getUserById(userId);
+            log.info("User found id = {}", userId);
+
+            return user;
+        } catch (ResourceNotFoundException exc) {
+            log.error("User id = {} not found", userId);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "User not found!", exc);
         }
     }
-
-    @GetMapping("/greeting")
-    public String greeting() {
-        return String.format(
-                "Hello from '%s'!", eurekaClient.getApplication(appName).getName());
-    }
-
 }
