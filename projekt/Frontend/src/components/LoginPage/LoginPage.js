@@ -1,21 +1,58 @@
 import React, {useState} from "react";
 import "./LoginPage.scss";
+
 import {withRouter} from "react-router-dom";
+import {UserService} from "../../Service/http";
 import {User} from "../Model/User";
 
 const LoginPage = props => {
   const [ name, setName ] = useState("");
+  const [ password, setPassword ] = useState("");
+  const [ error, setError ] = useState(null);
+  const [ isLoading, setLoading ] = useState(false);
+  const [ isRegistering, setRegister ] = useState(false);
 
+  const clearInputs = () => {
+    setPassword("");
+    setName("");
+    setError(null);
+  }
+
+  const setUser = ({name, id, password}) => {
+    User.password = password;
+    User.name = name;
+    User.id = id;
+  }
   return (
     <div id="loginPage-page">
       <div className="loginPage-page-container">
-        <h1 className="title">Type your Name</h1>
+        <h1 className="title">{isRegistering ? "Register your account" : "Login to our chat"}</h1>
+        {error && <div className="error-msg">{error}</div>}
         <form
           id="loginPageForm"
           name="loginPageForm"
           onSubmit={event => {
-            User.name = name;
-            props.history.push("/chat");
+            setLoading(true);
+            clearInputs();
+            const credentials = {name, password};
+            if (isRegistering) {
+              UserService.register(credentials).then(({data}) => {
+                setError(null);
+                setUser(data);
+                props.history.push("/chat");
+              }).catch(e => {
+                setError("Name Already Exists!")
+              }).finally(() => setLoading(false))
+
+            } else {
+              UserService.login(credentials).then(({data}) => {
+                setError(null);
+                setUser(data);
+                props.history.push("/chat");
+              }).catch(e => {
+                setError("Bad credentials!")
+              }).finally(() => setLoading(false))
+            }
             event.preventDefault();
           }}
         >
@@ -31,11 +68,26 @@ const LoginPage = props => {
             />
           </div>
           <div className="form-group">
-            <button type="submit" className="accent loginPage-submit">
-              Start Chatting
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              value={password}
+              autoComplete="off"
+              className="form-control"
+              onChange={event => setPassword(event.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <button type="submit" className="accent loginPage-submit" disabled={isLoading}>
+              {isRegistering ? "Register" : "Start Chatting"}
             </button>
           </div>
         </form>
+        <button className="register-btn" type="button" onClick={() => {
+          isRegistering ? setRegister(false) : setRegister(true)
+          clearInputs();
+        }}>{isRegistering ? "Go to Login" : "Go to Register"}</button>
       </div>
     </div>
   );

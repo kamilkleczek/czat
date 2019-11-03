@@ -1,34 +1,28 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
+import {Redirect} from 'react-router-dom';
 import "./Chat.scss";
 import SockJsClient from "react-stomp";
-import Axios from "axios";
 import {MessageGenerator, MessageType} from "../Model/Message";
-const BACKEND_URL = "http://localhost:8080/";
-
-
-
+import {BACKEND_URL} from "../../Service/settings";
+import {User} from "../Model/User";
 const Chat = () => {
   const [ connected, setConnected ] = useState(false);
   const [ message, setMessage ] = useState("");
   const [ messages, setMessages ] = useState([]);
   const [ clientRef, setClientRef ] = useState(null);
 
-  // useEffect(() => {
-  // Axios.get(`${BACKEND_URL}/history`).then(response => {
-  //   setMessages(response.data);
-
-  // }, []);
-
   const onMessageReceive = (msg, topic) => {
     setMessages([ ...messages, msg ]);
   };
 
   const getMessage = (message) => {
-    console.log("TCL: getMessage -> message", message)
     if (message.type === MessageType.Chat) {
       return <li><div className="username">{message.sender}</div>{message.content}</li>
     }
     return <li>{message.content}</li>
+  }
+  if (User.id == null) {
+    return <Redirect to="/" />
   }
 
   return (
