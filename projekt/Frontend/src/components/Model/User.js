@@ -1,3 +1,5 @@
 export const User = {
-  name: ""
-} 
+  password: null,
+  name: null,
+  id: null,
+}

@@ -2,36 +2,57 @@ import React, {useState} from "react";
 import "./LoginPage.scss";
 
 import {withRouter} from "react-router-dom";
+import {UserService} from "../../Service/http";
 import {User} from "../Model/User";
 
 const LoginPage = props => {
   const [ name, setName ] = useState("");
   const [ password, setPassword ] = useState("");
+  const [ error, setError ] = useState(null);
   const [ isLoading, setLoading ] = useState(false);
   const [ isRegistering, setRegister ] = useState(false);
 
   const clearInputs = () => {
     setPassword("");
     setName("");
+    setError(null);
   }
 
+  const setUser = ({name, id, password}) => {
+    User.password = password;
+    User.name = name;
+    User.id = id;
+  }
   return (
     <div id="loginPage-page">
       <div className="loginPage-page-container">
         <h1 className="title">{isRegistering ? "Register your account" : "Login to our chat"}</h1>
+        {error && <div className="error-msg">{error}</div>}
         <form
           id="loginPageForm"
           name="loginPageForm"
           onSubmit={event => {
             setLoading(true);
-            User.name = name;
-            User.password = password;
+            clearInputs();
+            const credentials = {name, password};
             if (isRegistering) {
-              console.log("TCL: Registering User", User)
+              UserService.register(credentials).then(({data}) => {
+                setError(null);
+                setUser(data);
+                props.history.push("/chat");
+              }).catch(e => {
+                setError("Name Already Exists!")
+              }).finally(() => setLoading(false))
+
             } else {
-              console.log("TCL: Login in User", User)
+              UserService.login(credentials).then(({data}) => {
+                setError(null);
+                setUser(data);
+                props.history.push("/chat");
+              }).catch(e => {
+                setError("Bad credentials!")
+              }).finally(() => setLoading(false))
             }
-            // props.history.push("/chat");
             event.preventDefault();
           }}
         >

@@ -1,8 +1,10 @@
 import React, {useState} from "react";
+import {Redirect} from 'react-router-dom';
 import "./Chat.scss";
 import SockJsClient from "react-stomp";
 import {MessageGenerator, MessageType} from "../Model/Message";
 import {BACKEND_URL} from "../../Service/settings";
+import {User} from "../Model/User";
 const Chat = () => {
   const [ connected, setConnected ] = useState(false);
   const [ message, setMessage ] = useState("");
@@ -14,11 +16,13 @@ const Chat = () => {
   };
 
   const getMessage = (message) => {
-    console.log("TCL: getMessage -> message", message)
     if (message.type === MessageType.Chat) {
       return <li><div className="username">{message.sender}</div>{message.content}</li>
     }
     return <li>{message.content}</li>
+  }
+  if (User.id == null) {
+    return <Redirect to="/" />
   }
 
   return (
