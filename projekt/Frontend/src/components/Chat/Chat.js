@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import {Redirect} from 'react-router-dom';
+import {Redirect, useHistory} from 'react-router-dom';
 import "./Chat.scss";
 import SockJsClient from "react-stomp";
 import {MessageGenerator, MessageType} from "../Model/Message";
 import {BACKEND_URL} from "../../Service/settings";
 import {User} from "../Model/User";
 const Chat = () => {
+  let history = useHistory();
   const [ connected, setConnected ] = useState(false);
   const [ message, setMessage ] = useState("");
   const [ messages, setMessages ] = useState([]);
@@ -16,10 +17,11 @@ const Chat = () => {
   };
 
   const getMessage = (message) => {
+    let key = `${message.sender}-${message.content.replace(/\s+/g, '')}`;
     if (message.type === MessageType.Chat) {
-      return <li><div className="username">{message.sender}</div>{message.content}</li>
+      return <li key={key}><div className="username">{message.sender}</div>{message.content}</li>
     }
-    return <li>{message.content}</li>
+    return <li key={key}>{message.content}</li>
   }
   if (User.id == null) {
     return <Redirect to="/" />
@@ -30,6 +32,9 @@ const Chat = () => {
       <div className="chat-container">
         <div className="chat-header">
           <h2>Welcome in our chat!</h2>
+          <button className="link-btn" type="button" onClick={() => {
+            history.push('/history');
+          }}>Chat History</button>
         </div>
         {!connected ? (
           <div className="connecting">Connecting...</div>

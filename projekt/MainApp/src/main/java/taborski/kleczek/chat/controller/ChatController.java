@@ -9,12 +9,13 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
+import taborski.kleczek.chat.entity.History;
 import taborski.kleczek.chat.entity.User;
-import taborski.kleczek.chat.model.ChatHistoryDao;
 import taborski.kleczek.chat.model.Message;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -23,25 +24,45 @@ import java.util.List;
 public class ChatController {
 
     @Autowired
-    private ChatHistoryDao chatHistoryDao;
+    private IUserAppClient userAppClient;
 
     @Autowired
-    private IUserAppClient userAppClient;
+    private IHistoryAppClient historyAppClient;
+
 
     @MessageMapping("/all")
     @MessageExceptionHandler
     @SendTo("/topic/all")
     public Message post(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
-        log.info("message: from {}, text {}", message.getSender(), message.getContent());
-        chatHistoryDao.save(message);
+        headerAccessor.getSessionAttributes().put("id", message.getSenderId());
+        log.info("message: from {}, text {}, senderId {}", message.getSender(), message.getContent(),message.getSenderId());
+        log.info("Adding message to history");
+        History history = new History();
+        history.setMessage(message.getContent());
+        history.setSenderId(message.getSenderId());
+        history.setType(message.getType().name());
+        historyAppClient.addHistory(history);
         return message;
     }
 
 
-    @RequestMapping("/history")
-    public List<Message> getChatHistory() {
-        return chatHistoryDao.get();
+    @GetMapping("api/history")
+    public ResponseEntity getChatHistory() {
+        log.info("Fetching full history");
+        List<History> history = historyAppClient.getHistory();
+        return ResponseEntity.ok(history.stream().map(el -> {
+            Message message = new Message();
+            message.setContent(el.getMessage());
+            User sender = userAppClient.getUser(el.getSenderId());
+
+            message.setSender(sender.getName());
+            message.setSenderId(el.getSenderId());
+            message.setType(Message.Type.valueOf(el.getType()));
+
+            return message;
+        }).collect(Collectors.toList()));
+
     }
 
 
