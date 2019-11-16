@@ -61,9 +61,10 @@ Zjazd 3:
 Zjazd 4:
 - Backend
 - Rejestracja + logowanie użytkowników
+- Obsluga histori
 
 Zjazd 5: 
-- Logowanie aktywności
+- Podlaczenie dokera
 
 Zjazd 6:
 - Testy
