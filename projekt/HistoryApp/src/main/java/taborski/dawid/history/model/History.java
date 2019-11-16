@@ -16,9 +16,10 @@ public class History {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column
     private String message;
+
+    @NotBlank
+    private String type;
 
     @NotNull
     private Long senderId;

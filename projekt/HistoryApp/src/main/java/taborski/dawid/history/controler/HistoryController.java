@@ -21,12 +21,14 @@ public class HistoryController {
 
     @GetMapping
     public List<History> getHisotry() {
+        log.info("Fetching full history");
         return this.historyService.getHistory();
     }
 
 
     @PostMapping
     public History addHisotry(@RequestBody History history) {
+        log.info("Adding history object = {}", history.getMessage());
         return this.historyService.add(history);
     }
 }

@@ -28,12 +28,14 @@ public class WebSocketEventListener {
         log.info("{}", headerAccessor);
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if (username != null) {
+            Long senderId = (Long) headerAccessor.getSessionAttributes().get("id");
             log.info("User Disconnected : " + username);
 
             Message chatMessage = new Message();
             chatMessage.setType(Message.Type.LEAVE);
             chatMessage.setContent(username + " left!");
             chatMessage.setSender(username);
+            chatMessage.setSenderId(senderId);
 
             messagingTemplate.convertAndSend("/topic/all", chatMessage);
         }

@@ -11,5 +11,6 @@ import javax.validation.constraints.NotNull;
 public class History {
     private Long id;
     private String message;
+    private String type;
     private Long senderId;
 }
