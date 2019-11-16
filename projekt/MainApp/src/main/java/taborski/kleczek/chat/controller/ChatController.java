@@ -47,7 +47,7 @@ public class ChatController {
     }
 
 
-    @GetMapping("/history")
+    @GetMapping("api/history")
     public ResponseEntity getChatHistory() {
         log.info("Fetching full history");
         List<History> history = historyAppClient.getHistory();

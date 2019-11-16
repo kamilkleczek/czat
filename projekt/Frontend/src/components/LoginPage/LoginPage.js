@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import "./LoginPage.scss";
 
 import {withRouter} from "react-router-dom";
-import {UserService} from "../../Service/http";
+import {MainService} from "../../Service/http";
 import {User} from "../Model/User";
 
 const LoginPage = props => {
@@ -36,7 +36,7 @@ const LoginPage = props => {
             clearInputs();
             const credentials = {name, password};
             if (isRegistering) {
-              UserService.register(credentials).then(({data}) => {
+              MainService.register(credentials).then(({data}) => {
                 setError(null);
                 setUser(data);
                 props.history.push("/chat");
@@ -45,7 +45,7 @@ const LoginPage = props => {
               }).finally(() => setLoading(false))
 
             } else {
-              UserService.login(credentials).then(({data}) => {
+              MainService.login(credentials).then(({data}) => {
                 setError(null);
                 setUser(data);
                 props.history.push("/chat");
@@ -84,7 +84,7 @@ const LoginPage = props => {
             </button>
           </div>
         </form>
-        <button className="register-btn" type="button" onClick={() => {
+        <button className="link-btn" type="button" onClick={() => {
           isRegistering ? setRegister(false) : setRegister(true)
           clearInputs();
         }}>{isRegistering ? "Go to Login" : "Go to Register"}</button>
