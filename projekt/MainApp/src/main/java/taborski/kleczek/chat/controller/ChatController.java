@@ -10,7 +10,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 import taborski.kleczek.chat.entity.User;
-import taborski.kleczek.chat.model.ChatHistoryDao;
 import taborski.kleczek.chat.model.Message;
 
 import javax.validation.Valid;
@@ -23,10 +22,11 @@ import java.util.List;
 public class ChatController {
 
     @Autowired
-    private ChatHistoryDao chatHistoryDao;
+    private IUserAppClient userAppClient;
 
     @Autowired
-    private IUserAppClient userAppClient;
+    private IHistoryAppClient historyAppClient;
+
 
     @MessageMapping("/all")
     @MessageExceptionHandler
@@ -34,14 +34,17 @@ public class ChatController {
     public Message post(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         log.info("message: from {}, text {}", message.getSender(), message.getContent());
-        chatHistoryDao.save(message);
+        // TODO save data from historyAppClient
+//        chatHistoryDao.save(message);
         return message;
     }
 
 
-    @RequestMapping("/history")
+    @GetMapping("/history")
     public List<Message> getChatHistory() {
-        return chatHistoryDao.get();
+//        return chatHistoryDao.get();
+        // TODO get data from historyAppClient
+        return null;
     }
 
 
