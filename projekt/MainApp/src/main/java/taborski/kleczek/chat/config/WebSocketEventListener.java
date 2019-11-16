@@ -8,6 +8,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import taborski.kleczek.chat.controller.IHistoryAppClient;
+import taborski.kleczek.chat.entity.History;
 import taborski.kleczek.chat.model.Message;
 
 @Slf4j
@@ -16,6 +18,9 @@ public class WebSocketEventListener {
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
+
+    @Autowired
+    private IHistoryAppClient historyAppClient;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -36,6 +41,11 @@ public class WebSocketEventListener {
             chatMessage.setContent(username + " left!");
             chatMessage.setSender(username);
             chatMessage.setSenderId(senderId);
+            History history = new History();
+            history.setType(chatMessage.getType().name());
+            history.setSenderId(senderId);
+            history.setMessage(chatMessage.getContent());
+            historyAppClient.addHistory(history);
 
             messagingTemplate.convertAndSend("/topic/all", chatMessage);
         }
