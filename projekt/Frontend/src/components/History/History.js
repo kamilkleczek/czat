@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from "react";
-import {Redirect, useHistory} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import {MessageType} from "../Model/Message";
 import {User} from "../Model/User";
 import {MainService} from "../../Service/http";
 
-const History = () => {
-  let history = useHistory();
+const History = ({isChatHandler}) => {
   const [ msgHistory, setMsgHistory ] = useState([]);
   const [ loading, setLoading ] = useState(true);
 
@@ -34,10 +33,8 @@ const History = () => {
       <div className="chat-container">
         <div className="chat-header">
           <h2>This is our chat history!</h2>
-          <button className="link-btn" type="button" onClick={() => {
-            history.push('/chat');
-            
-          }}>Go Back to Chat</button>
+          <button className="link-btn" type="button" onClick={() =>
+            isChatHandler(true)}>Go Back to Chat</button>
         </div>
         {loading ? (
           <div className="connecting">Loading...</div>

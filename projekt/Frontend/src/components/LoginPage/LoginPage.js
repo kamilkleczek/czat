@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import "./LoginPage.scss";
 
-import {withRouter} from "react-router-dom";
+import {withRouter , useHistory} from "react-router-dom";
 import {MainService} from "../../Service/http";
 import {User} from "../Model/User";
 
-const LoginPage = props => {
+const LoginPage = () => {
+  let history = useHistory();
   const [ name, setName ] = useState("");
   const [ password, setPassword ] = useState("");
   const [ error, setError ] = useState(null);
@@ -38,8 +39,7 @@ const LoginPage = props => {
             if (isRegistering) {
               MainService.register(credentials).then(({data}) => {
                 setError(null);
-                setUser(data);
-                props.history.push("/chat");
+                setRegister(false);
               }).catch(e => {
                 setError("Name Already Exists!")
               }).finally(() => setLoading(false))
@@ -48,7 +48,7 @@ const LoginPage = props => {
               MainService.login(credentials).then(({data}) => {
                 setError(null);
                 setUser(data);
-                props.history.push("/chat");
+                history.push("/chat");
               }).catch(e => {
                 setError("Bad credentials!")
               }).finally(() => setLoading(false))

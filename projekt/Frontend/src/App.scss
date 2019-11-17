@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+
   .container {
     height: 100vh;
   }
@@ -7,6 +8,14 @@
 
 .App-logo {
   height: 40vmin;
+}
+
+#logged-user {
+
+  &,
+  & .link-btn {
+    color: white;
+  }
 }
 
 .App-header {
