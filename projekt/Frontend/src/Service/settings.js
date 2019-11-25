@@ -1,1 +1,1 @@
-export const BACKEND_URL = "http://localhost:8080/";
+export const BACKEND_URL =  process.env.NODE_ENV === "development"?  "http://localhost:8080": "http://192.168.99.100:8080";
