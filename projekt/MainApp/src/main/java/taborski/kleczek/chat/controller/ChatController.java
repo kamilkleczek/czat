@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://192.168.99.100:3000")
 @RestController
 public class ChatController {
 
