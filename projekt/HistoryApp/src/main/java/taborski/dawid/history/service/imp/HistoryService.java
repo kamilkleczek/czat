@@ -10,20 +10,20 @@ import java.util.List;
 
 @Service
 public class HistoryService implements IHistoryService {
-    private IHistoryRepository hisotryRepository;
+    private IHistoryRepository historyRepository;
 
     @Autowired
-    public HistoryService(IHistoryRepository hisotryRepository) {
-        this.hisotryRepository = hisotryRepository;
+    public HistoryService(IHistoryRepository historyRepository) {
+        this.historyRepository = historyRepository;
     }
 
     @Override
     public List<History> getHistory() {
-        return this.hisotryRepository.findAll();
+        return this.historyRepository.findAll();
     }
 
     @Override
     public History add(History history) {
-        return this.hisotryRepository.save(history);
+        return this.historyRepository.save(history);
     }
 }
