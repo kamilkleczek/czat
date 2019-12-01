@@ -1,7 +1,7 @@
 FROM openjdk:8
-ADD target/docker-eureka-server.jar docker-eureka-server.jar
+COPY target/docker-eureka-server.jar docker-eureka-server.jar
 EXPOSE 8761
-ENTRYPOINT ["java", "-jar","docker-eureka-server"]
+ENTRYPOINT ["java", "-jar","docker-eureka-server.jar"]
 #
 #FROM maven:3.5-jdk-8 AS build
 #WORKDIR /
