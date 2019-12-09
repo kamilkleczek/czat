@@ -1,0 +1,30 @@
+version: "3"
+services:
+  frontend:
+    image: docker-front
+    ports:
+      - "3000:80"
+    depends_on:
+      - main-service
+  main-service:
+    image: docker-main-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+      - user-service
+      - history-service
+  eureka-server:
+    image: docker-eureka-server
+    ports:
+      - "8761:8761"
+  user-service:
+    image: docker-user-service
+    ports:
+      - "8081:8081"
+  history-service:
+    image: docker-history-service
+    ports:
+      - "8082:8082"
+
+
