@@ -20,4 +20,6 @@ docker build -t docker-front .
 docker run -it -p 3000:80 docker-front
 
 docker swarm
-docker swarm join --token SWMTKN-1-3utn48r6f82o8dq3s6y1xanhaudbrhhy7nu5hw79zgkc83yufz-6ua293in1pq3l4vpdeep3f2xr 10.0.2.15:2377
+docker swarm init
+docker stack deploy -c ./docker-compose.yml czat-app
+docker swarm leave

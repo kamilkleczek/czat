@@ -2,12 +2,16 @@ version: "3"
 services:
   frontend:
     image: docker-front
+    deploy:
+      replicas: 1
     ports:
       - "3000:80"
     depends_on:
       - main-service
   main-service:
     image: docker-main-service
+    deploy:
+      replicas: 1
     ports:
       - "8080:8080"
     depends_on:
@@ -16,14 +20,20 @@ services:
       - history-service
   eureka-server:
     image: docker-eureka-server
+    deploy:
+      replicas: 1
     ports:
       - "8761:8761"
   user-service:
     image: docker-user-service
+    deploy:
+      replicas: 1
     ports:
       - "8081:8081"
   history-service:
     image: docker-history-service
+    deploy:
+      replicas: 1
     ports:
       - "8082:8082"
 
