@@ -25,7 +25,7 @@ Stos technologiczny:
 - Backend: Java + Spring
 - Frontend: Javascript + React
 - Konteneryzacja: Docker
-- Zarządzenie Kontenerami: Kubernetes
+- Zarządzenie Kontenerami: Docker swarm
 
 Analiza wymagań
 Wymagania funkcjonalne i niefunkcjonalne - specyfikacja
@@ -37,7 +37,8 @@ System musi być skalowalny.
 System loguje aktywność użytkowników (logowanie oraz wysłanie wiadomości).
 System autoryzuje użytkowników.
 System umożliwia rejestracje użytkowników.
-TODO
+System umożliwa przesyłanie wiadomości
+System zapisuje wiadomości w histori
 
 Przypadki użycia
 TODO
