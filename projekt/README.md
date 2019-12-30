@@ -20,6 +20,6 @@ docker build -t docker-front .
 docker run -it -p 3000:80 docker-front
 
 docker swarm
-docker swarm init
+docker swarm init --advertise-addr 10.0.2.15
 docker stack deploy -c ./docker-compose.yml czat-app
 docker swarm leave

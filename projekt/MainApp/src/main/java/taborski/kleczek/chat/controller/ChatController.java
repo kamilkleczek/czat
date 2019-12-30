@@ -1,5 +1,6 @@
 package taborski.kleczek.chat.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import taborski.kleczek.chat.entity.User;
 import taborski.kleczek.chat.model.Message;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,7 @@ public class ChatController {
     public Message post(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         headerAccessor.getSessionAttributes().put("id", message.getSenderId());
-        log.info("message: from {}, text {}, senderId {}", message.getSender(), message.getContent(),message.getSenderId());
+        log.info("message: from {}, text {}, senderId {}", message.getSender(), message.getContent(), message.getSenderId());
         log.info("Adding message to history");
         History history = new History();
         history.setMessage(message.getContent());
@@ -47,6 +49,7 @@ public class ChatController {
     }
 
 
+    @HystrixCommand(fallbackMethod = "defaultHistory")
     @GetMapping("api/history")
     public ResponseEntity getChatHistory() {
         log.info("Fetching full history");
@@ -62,10 +65,14 @@ public class ChatController {
 
             return message;
         }).collect(Collectors.toList()));
+    }
 
+    public ResponseEntity defaultHistory() {
+        return ResponseEntity.ok(new ArrayList<>());
     }
 
 
+    @HystrixCommand(fallbackMethod = "defaultLogin")
     @PostMapping("api/login")
     public ResponseEntity loginUser(@RequestBody User user) {
         log.info("login user {}", user.getName());
@@ -78,18 +85,11 @@ public class ChatController {
         }
     }
 
-    @GetMapping("api/{id}")
-    public ResponseEntity getUser(@PathVariable(name = "id") @Valid Long userId) {
-        log.info("geting user id = {}", userId);
-        try {
-            User user = userAppClient.getUser(userId);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            log.error("get user error = {}", e.getMessage());
-            return ResponseEntity.badRequest().body("User not found!");
-        }
+    public ResponseEntity defaultLogin() {
+        return ResponseEntity.badRequest().body("Login service is down, try again later.");
     }
 
+    @HystrixCommand(fallbackMethod = "defaultRegister")
     @PostMapping("api/register")
     ResponseEntity registerUser(@RequestBody User user) {
         log.info("register user = {}", user.getName());
@@ -102,5 +102,8 @@ public class ChatController {
         }
     }
 
+    public ResponseEntity defaultRegister() {
+        return ResponseEntity.badRequest().body("Register service is down, try again later.");
+    }
 
 }

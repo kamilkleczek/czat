@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import "./LoginPage.scss";
 
-import {withRouter , useHistory} from "react-router-dom";
+import {withRouter, useHistory} from "react-router-dom";
 import {MainService} from "../../Service/http";
 import {User} from "../Model/User";
 
@@ -50,6 +50,7 @@ const LoginPage = () => {
                 setUser(data);
                 history.push("/chat");
               }).catch(e => {
+                console.log("TCL: e", e);
                 setError("Bad credentials!")
               }).finally(() => setLoading(false))
             }
