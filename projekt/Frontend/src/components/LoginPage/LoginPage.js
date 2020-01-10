@@ -50,7 +50,6 @@ const LoginPage = () => {
                 setUser(data);
                 history.push("/chat");
               }).catch(e => {
-                console.log("TCL: e", e);
                 setError("Bad credentials!")
               }).finally(() => setLoading(false))
             }
