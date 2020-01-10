@@ -1,6 +1,5 @@
 package taborski.kleczek.chat.controller;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import taborski.kleczek.chat.entity.History;
 import taborski.kleczek.chat.entity.User;
 import taborski.kleczek.chat.model.Message;
-
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Slf4j
-@CrossOrigin(origins = "http://192.168.99.100:3000")
+@CrossOrigin
 @RestController
 public class ChatController {
 
@@ -48,8 +43,6 @@ public class ChatController {
         return message;
     }
 
-
-    @HystrixCommand(fallbackMethod = "defaultHistory")
     @GetMapping("api/history")
     public ResponseEntity getChatHistory() {
         log.info("Fetching full history");
@@ -67,17 +60,13 @@ public class ChatController {
         }).collect(Collectors.toList()));
     }
 
-    public ResponseEntity defaultHistory() {
-        return ResponseEntity.ok(new ArrayList<>());
-    }
-
-
-    @HystrixCommand(fallbackMethod = "defaultLogin")
     @PostMapping("api/login")
     public ResponseEntity loginUser(@RequestBody User user) {
         log.info("login user {}", user.getName());
         try {
             User logged = userAppClient.loginUser(user);
+            log.info("login success {}", logged.getName());
+
             return ResponseEntity.ok(logged);
         } catch (Exception e) {
             log.error("login error = {}", e.getMessage());
@@ -89,21 +78,17 @@ public class ChatController {
         return ResponseEntity.badRequest().body("Login service is down, try again later.");
     }
 
-    @HystrixCommand(fallbackMethod = "defaultRegister")
     @PostMapping("api/register")
     ResponseEntity registerUser(@RequestBody User user) {
         log.info("register user = {}", user.getName());
         try {
             User registerUser = userAppClient.registerUser(user);
+            log.info("register success {}", registerUser.getName());
+
             return ResponseEntity.ok(registerUser);
         } catch (Exception e) {
             log.error("register error = {}", e.getMessage());
             return ResponseEntity.badRequest().body("User already exists!");
         }
     }
-
-    public ResponseEntity defaultRegister() {
-        return ResponseEntity.badRequest().body("Register service is down, try again later.");
-    }
-
 }
