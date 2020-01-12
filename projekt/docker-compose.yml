@@ -8,6 +8,7 @@ services:
       - "3000:80"
     depends_on:
       - main-service
+      - elk
   main-service:
     image: docker-main-service
     deploy:
@@ -16,8 +17,7 @@ services:
       - "8080:8080"
     depends_on:
       - eureka-server
-      - user-service
-      - history-service
+      - elk
   eureka-server:
     image: docker-eureka-server
     deploy:
@@ -36,5 +36,11 @@ services:
       replicas: 1
     ports:
       - "8082:8082"
+  elk:
+    image: sebp/elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
 
 

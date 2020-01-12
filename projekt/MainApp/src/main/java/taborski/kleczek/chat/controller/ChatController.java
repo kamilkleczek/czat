@@ -1,5 +1,6 @@
 package taborski.kleczek.chat.controller;
 
+import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,9 @@ import taborski.kleczek.chat.model.Message;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @CrossOrigin(origins = "http://192.168.99.100:3000")
 @RestController
 public class ChatController {
-
     @Autowired
     private IUserAppClient userAppClient;
 
@@ -33,8 +32,6 @@ public class ChatController {
     public Message post(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         headerAccessor.getSessionAttributes().put("id", message.getSenderId());
-        log.info("message: from {}, text {}, senderId {}", message.getSender(), message.getContent(), message.getSenderId());
-        log.info("Adding message to history");
         History history = new History();
         history.setMessage(message.getContent());
         history.setSenderId(message.getSenderId());
@@ -45,7 +42,6 @@ public class ChatController {
 
     @GetMapping("api/history")
     public ResponseEntity getChatHistory() {
-        log.info("Fetching full history");
         List<History> history = historyAppClient.getHistory();
         return ResponseEntity.ok(history.stream().map(el -> {
             Message message = new Message();
@@ -62,14 +58,11 @@ public class ChatController {
 
     @PostMapping("api/login")
     public ResponseEntity loginUser(@RequestBody User user) {
-        log.info("login user {}", user.getName());
         try {
             User logged = userAppClient.loginUser(user);
-            log.info("login success {}", logged.getName());
 
             return ResponseEntity.ok(logged);
         } catch (Exception e) {
-            log.error("login error = {}", e.getMessage());
             return ResponseEntity.badRequest().body("Bad credentials!");
         }
     }
@@ -80,14 +73,11 @@ public class ChatController {
 
     @PostMapping("api/register")
     ResponseEntity registerUser(@RequestBody User user) {
-        log.info("register user = {}", user.getName());
         try {
             User registerUser = userAppClient.registerUser(user);
-            log.info("register success {}", registerUser.getName());
 
             return ResponseEntity.ok(registerUser);
         } catch (Exception e) {
-            log.error("register error = {}", e.getMessage());
             return ResponseEntity.badRequest().body("User already exists!");
         }
     }

@@ -100,28 +100,6 @@ public class HttpRequestTest {
                 .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    public void shouldGetUser() throws Exception {
-//
-//        User user = new User();
-//        user.setId(1l);
-//        user.setName("Mock name");
-//        user.setPassword("Mock password");
-//        when(userAppClient.getUser(1l)).thenReturn(user);
-//
-//
-//        this.mockMvc.perform(get("/api/1")).andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id", notNullValue()));
-//    }
-//
-//    @Test
-//    public void shouldNotGetUser() throws Exception {
-//        when(userAppClient.getUser(1l)).thenThrow(NullPointerException.class);
-//        this.mockMvc.perform(post("/api/login")).andDo(print())
-//                .andExpect(status().isBadRequest());
-//    }
-
     @Test
     public void shouldRegisterUser() throws Exception {
 
@@ -162,6 +140,4 @@ public class HttpRequestTest {
 
         return fullHistory;
     }
-
-
 }
